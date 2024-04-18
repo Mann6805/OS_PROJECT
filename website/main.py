@@ -329,7 +329,7 @@ elif opt == "FCFS Disk Scheduling":
         btn = st.button(label="Calculate",key="FCFS")
         seek_time = FCFS(queue,head)
         if btn:
-          y = np.arange(len(queue)+1,0,1)
+          y = np.arange(0,len(queue)+1,1)
           x = [head]+queue
           fig = plt.figure()
           plt.style.use('https://github.com/dhaitz/matplotlib-stylesheets/raw/master/pitayasmoothie-dark.mplstyle')
