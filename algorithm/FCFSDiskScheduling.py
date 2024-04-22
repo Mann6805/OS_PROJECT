@@ -5,13 +5,12 @@ def FCFS(arr, head):
     for i in range(n):
         seek = abs(arr[i] - head)      # abs diff between current request and current position of head
         seek_time += seek
-
         # Move the head to the next request
         head = arr[i]
-
     return seek_time
-
-requests = [98, 183, 37, 122, 14, 124, 65, 67]    # Request queue
+    
+# Request queue
+requests = [98, 183, 37, 122, 14, 124, 65, 67]
 initial_head = 53
 seek_time = FCFS(requests, initial_head)
 
