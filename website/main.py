@@ -2,9 +2,8 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
-opt = st.sidebar.radio("Select",options=("Premptive Priority","FCFS Disk Scheduling"))
+opt = st.sidebar.radio("Select",options=("Premptive Priority","FCFS Disk Scheduling","Least Recently Used"))
 if opt == "Premptive Priority":
-
 
   def Priority(processlist):
     
@@ -100,128 +99,129 @@ if opt == "Premptive Priority":
   st.markdown("---")
   st.header("Code")
   code="""# Function
-  def priority(processlist):
-    relist = [] #list to store completed process
-    queue = []  #to store process which needs to wait
+          def Priority(processlist):
+              
+            relist = [] #list to store completed process
+            queue = []  #to store process which needs to wait
 
-    # sorted all process according to arrivaltime and priority
-    processlist = sorted(processlist, key = lambda x: (x["arrivaltime"],x["priority"]))
-    for x in processlist:
-      x["bursttime1"] = x["bursttime"]
+              # sorted all process according to Arrival Time and Priority
+            processlist = sorted(processlist, key = lambda x: (x["Arrival Time"],x["Priority"]))
+            for x in processlist:
+              x["Burst Time1"] = x["Burst Time"]
 
-    # Active process store process which is getting used by CPU
-    activeprocess = processlist.pop(0)
-    time = activeprocess["arrivaltime"]
-
-    # Loop will run until all process get completed
-    while queue or processlist or activeprocess["bursttime"] != 0:
-
-      # If there are any process left in processlist
-      if processlist:
-
-        # increase time and decrease bursttime until next process comes
-        if (time != processlist[0]["arrivaltime"] and activeprocess["bursttime"] != 0):
-          activeprocess["bursttime"] -= 1 
-          time+=1 
-
-        else:
-
-          # If activeprocess priority is higher than processlist then it is getting append in processlist
-          if(activeprocess["priority"] <= processlist[0]["priority"]):
-            queue.append(processlist.pop(0))
-            queue = sorted(queue, key = lambda x: (x["priority"],x["arrivaltime"])) #sorting array on basis of priority and arrivaltime
-          else:
-
-            # If queue is empty then it pushes activeprocess in queue
-            if not queue:
-              queue.append(activeprocess)
-              activeprocess = processlist.pop(0)
-              queue = sorted(queue, key = lambda x: (x["priority"],x["arrivaltime"]))
-
-            # If queue is not empty then we have to take process which has more priority
-            else:
-
-              # If priority of process in queue is higher than processlist then it will become activeprocess
-              if (queue[0]["priority"] < processlist[0]["priority"]):
-                activeprocess = queue.pop(0)
-                queue.append(processlist.pop(0))
-                queue = sorted(queue, key = lambda x: (x["priority"],x["arrivaltime"]))
-              else:
-                queue.append(activeprocess)
-                activeprocess = processlist.pop(0)
-                queue = sorted(queue, key = lambda x: (x["priority"],x["arrivaltime"]))
-
-      # If queue have some process but procesllist don't
-      else:
-        
-        # Checking already sorted queue 
-        if queue:
-          if (activeprocess["bursttime"] != 0):
-            activeprocess["bursttime"]-=1
-            time+=1
-          else:
-            activeprocess=queue.pop(0)
-
-        # If last process is running and queue is empty
-        elif activeprocess["bursttime"] != 0:
-            activeprocess["bursttime"]-=1
-            time+=1
-
-      # Append every completed process
-      if (activeprocess["bursttime"] == 0 and activeprocess["ctime"] == 0):
-        activeprocess["ctime"] = time
-        activeprocess["turnaroundtime"] = time - activeprocess["arrivaltime"]
-        activeprocess["waitingtime"] = activeprocess["turnaroundtime"] - activeprocess["bursttime1"]
-        relist.append(activeprocess)
-        # If active prcoess is completed and cpu is in idle state then it will make process in queue as activeprocess or make the next process in processlist as activeprocess
-        if processlist and time != processlist[0]["arrivaltime"]:
-          if not queue:
-            time = processlist[0]["arrivaltime"]
+            # Active process store process which is getting used by CPU
             activeprocess = processlist.pop(0)
-          else:
-            activeprocess = queue.pop(0)
+            time = activeprocess["Arrival Time"]
 
-    # Printing relist  
-    relist = sorted(relist, key = lambda x: (x["arrivaltime"],x["priority"]))
-    for x in relist:
-      x["bursttime"] = x["bursttime1"]
-      x.pop("bursttime1")
-      print(x)
+            # Loop will run until all process get completed
+            while queue or processlist or activeprocess["Burst Time"] != 0:
 
-  # Defining process using dictionary
-  process1 = {
-    "priority" : 4,
-    "arrivaltime" : 6,
-    "bursttime" : 34,
-    "ctime": 0,
-  }
+            # If there are any process left in processlist
+              if processlist:
 
-  process2 = {
-    "priority" : 2,
-    "arrivaltime" : 10,
-    "bursttime" : 1,
-    "ctime": 0,
-  }
+                # increase time and decrease Burst Time until next process comes
+                if (time != processlist[0]["Arrival Time"] and activeprocess["Burst Time"] != 0):
+                  activeprocess["Burst Time"] -= 1 
+                  time+=1 
 
-  process3 = {
-    "priority" : 5,
-    "arrivaltime" : 11,
-    "bursttime" : 25,
-    "ctime": 0,
-  }
+                else:
 
-  process4 = {
-    "priority" : 1,
-    "arrivaltime" : 8,
-    "bursttime" : 31,
-    "ctime": 0,
-  }
+                  # If activeprocess Priority is higher than processlist then it is getting append in processlist
+                  if(activeprocess["Priority"] <= processlist[0]["Priority"]):
+                    queue.append(processlist.pop(0))
+                    queue = sorted(queue, key = lambda x: (x["Priority"],x["Arrival Time"])) #sorting array on basis of Priority and Arrival Time
+                  else:
 
-  # Making a list of process
-  list = [process1,process2,process3,process4]
+                    # If queue is empty then it pushes activeprocess in queue
+                    if not queue:
+                      queue.append(activeprocess)
+                      activeprocess = processlist.pop(0)
+                      queue = sorted(queue, key = lambda x: (x["Priority"],x["Arrival Time"]))
 
-  #calling function
-  priority(list)"""
+                    # If queue is not empty then we have to take process which has more Priority
+                    else:
+
+                      # If Priority of process in queue is higher than processlist then it will become activeprocess
+                      if (queue[0]["Priority"] < processlist[0]["Priority"]):
+                        activeprocess = queue.pop(0)
+                        queue.append(processlist.pop(0))
+                        queue = sorted(queue, key = lambda x: (x["Priority"],x["Arrival Time"]))
+                      else:
+                        queue.append(activeprocess)
+                        activeprocess = processlist.pop(0)
+                        queue = sorted(queue, key = lambda x: (x["Priority"],x["Arrival Time"]))
+
+                  # If queue have some process but procesllist don't
+              else:
+                    
+                # Checking already sorted queue 
+                if queue:
+                  if (activeprocess["Burst Time"] != 0):
+                    activeprocess["Burst Time"]-=1
+                    time+=1
+                  else:
+                    activeprocess=queue.pop(0)
+
+                # If last process is running and queue is empty
+                elif activeprocess["Burst Time"] != 0:
+                  activeprocess["Burst Time"]-=1
+                  time+=1
+
+                # Append every completed process
+                if (activeprocess["Burst Time"] == 0 and activeprocess["Completion Time"] == 0):
+                  activeprocess["Completion Time"] = time
+                  activeprocess["Turnaround Time"] = time - activeprocess["Arrival Time"]
+                  activeprocess["Waiting Time"] = activeprocess["Turnaround Time"] - activeprocess["Burst Time1"]
+                  relist.append(activeprocess)
+                  # If active prcoess is completed and cpu is in idle state then it will make process in queue as activeprocess or make the next process in processlist as activeprocess
+                  if processlist and time != processlist[0]["Arrival Time"]:
+                    if not queue:
+                      time = processlist[0]["Arrival Time"]
+                      activeprocess = processlist.pop(0)
+                    else:
+                      activeprocess = queue.pop(0)
+            relist = sorted(relist, key = lambda x: (x["Arrival Time"],x["Priority"]))
+            for x in relist:
+              x["Burst Time"] = x["Burst Time1"]
+              x.pop("Burst Time1")
+            return relist
+
+          # Defining process using dictionary
+          process1 = {
+            "Priority" : 4,
+            "Arrival Time" : 6,
+            "Burst Time" : 34,
+            "Completion Time": 0,
+          }
+
+          process2 = {
+            "Priority" : 2,
+            "Arrival Time" : 10,
+            "Burst Time" : 1,
+            "Completion Time": 0,
+          }
+
+          process3 = {
+            "Priority" : 5,
+            "Arrival Time" : 11,
+            "Burst Time" : 25,
+            "Completion Time": 0,
+          }
+
+          process4 = {
+            "Priority" : 1,
+            "Arrival Time" : 8,
+            "Burst Time" : 31,
+            "Completion Time": 0,
+          }
+
+          # Making a list of process
+          list = [process1,process2,process3,process4]
+
+          #calling function
+          result = Priority(list)
+          for i in result:
+            print(i)"""
   st.code(code,language="Python")
 
   st.markdown("---")
@@ -294,24 +294,24 @@ elif opt == "FCFS Disk Scheduling":
 
   st.title("Code")
   code="""def FCFS(arr, head):
-      n = len(arr)
-      seek_time = 0
+            n = len(arr)
+            seek_time = 0
 
-      for i in range(n):
-          seek = abs(arr[i] - head)      # abs diff between current request and current position of head
-          seek_time += seek
+            for i in range(n):
+                seek = abs(arr[i] - head)      # abs diff between current request and current position of head
+                seek_time += seek
 
-          # Move the head to the next request
-          head = arr[i]
+                # Move the head to the next request
+                head = arr[i]
 
-      return seek_time
+            return seek_time
 
-  requests = [98, 183, 37, 122, 14, 124, 65, 67]    # Request queue
-  initial_head = 53
-  seek_time = FCFS(requests, initial_head)
+            requests = [98, 183, 37, 122, 14, 124, 65, 67]    # Request queue
+            initial_head = 53
+            seek_time = FCFS(requests, initial_head)
 
-  print("Sequence of Disk Accesses:", requests)
-  print("Total Seek Time:", seek_time)"""
+            print("Sequence of Disk Accesses:", requests)
+            print("Total Seek Time:", seek_time)"""
   st.code(code,language="Python")
 
   st.markdown("---")
@@ -329,7 +329,7 @@ elif opt == "FCFS Disk Scheduling":
         btn = st.button(label="Calculate",key="FCFS")
         seek_time = FCFS(queue,head)
         if btn:
-          y = np.arange(0,len(queue)+1,1)
+          y = np.arange(len(queue)+1,0,1)
           x = [head]+queue
           fig = plt.figure()
           plt.style.use('https://github.com/dhaitz/matplotlib-stylesheets/raw/master/pitayasmoothie-dark.mplstyle')
@@ -341,3 +341,103 @@ elif opt == "FCFS Disk Scheduling":
           st.write("Total Seek Time: ",str(seek_time))
     except:
       st.warning("Check upur inputs.")
+elif opt == "Least Recently Used":
+  
+  def LRU(frames,pages):
+    hit = 0
+    miss = 0
+    cur_frame = []
+    track = []
+    result = []
+    for i in pages:
+      if i in cur_frame:
+        track.remove(i)
+        track.append(i)
+        hit+=1
+        result.append({
+          "Page" : i,
+          "Frames" : cur_frame.copy(),
+          "Hit/State" : "Hit"
+        })
+      else:
+        if len(cur_frame) == frames:
+          element = track.pop(0)
+          index = cur_frame.index(element)
+          cur_frame[index] = i
+        else:
+          cur_frame.append(i)
+        track.append(i)
+        miss+=1
+        result.append({
+          "Page" : i,
+          "Frames" : cur_frame.copy(),
+          "Hit/State" : "Miss"
+        })
+    return result, hit, miss
+  
+  st.title("Least Recently Used Page Scheduling")
+
+  st.markdown("---")
+
+  st.title("Code")
+  code = """def LRU(frames,pages):
+            hit = 0
+            miss = 0
+            cur_frame = []
+            track = []
+            result = []
+            for i in pages:
+              if i in cur_frame:
+                track.remove(i)
+                track.append(i)
+                hit+=1
+                result.append({
+                  "Page" : i,
+                  "Frames" : cur_frame.copy(),
+                  "Hit/State" : "Hit"
+                })
+              else:
+                if len(cur_frame) == frames:
+                  element = track.pop(0)
+                  index = cur_frame.index(element)
+                  cur_frame[index] = i
+                else:
+                  cur_frame.append(i)
+                track.append(i)
+                miss+=1
+                result.append({
+                  "Page" : i,
+                  "Frames" : cur_frame.copy(),
+                  "Hit/State" : "Miss"
+                })
+            return result, hit, miss
+
+          frames = 4
+          pages = [7, 0, 1, 3, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
+
+          ans,hit,miss = LRU(frames,pages)
+          print(f"Hit: {hit} Miss: {miss}")"""
+  
+  st.code(code,language="Python")
+
+  st.markdown("---")
+
+  st.header("Calculate: ")
+
+  frames = st.text_input(label="Enter frames: ",placeholder="eg: 60")
+  pages = st.text_input(label="Enter pages: ",placeholder="eg: 55 67 86 87")
+
+  if frames and pages:
+    try:
+      pages=list(map(int,pages.strip().split()))
+      frames=int(frames.strip())
+      if pages and frames:
+        btn = st.button(label="Calculate",key="LRU")
+        result,hit,miss = LRU(frames,pages)
+        if btn:
+          st.table(result)
+          st.write(f"Hit ratio: {hit/len(pages)}")
+          st.write(f"Miss ratio: {miss/len(pages)}")
+    except:
+      st.warning("Check upur inputs.")
+
