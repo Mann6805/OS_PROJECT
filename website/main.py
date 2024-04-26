@@ -1,8 +1,11 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+import threading
+import time
+import random
 
-opt = st.sidebar.radio("Choose your option",options=("Premptive Priority","FCFS Disk Scheduling","Least Recently Used"))
+opt = st.sidebar.radio("Choose your option",options=("Premptive Priority","FCFS Disk Scheduling","Least Recently Used","Reader Writer"))
 if opt == "Premptive Priority":
 
   def Priority(processlist):
@@ -376,7 +379,10 @@ elif opt == "Least Recently Used":
     return result, hit, miss
   
   st.title("Least Recently Used Page Scheduling")
-
+  st.write("The basic idea behind LRU is to replace the least recently used page when a new page needs to be brought into memory and there is no free space available.")
+  st.write("The algorithm aims to maximize the chances of retaining pages that are likely to be accessed again soon.")
+  st.subheader("Steps")
+  st.write(" 1. Tracking Page Access:\nRecord the order of page accesses.\n2. Replacement Decision: \nWhen memory is full, find the least recently used page.\n3. Eviction:\nRemove the least recently used page from memory.\n4. Update Access Record:\nMove the accessed page to the front for future reference.")
   st.markdown("---")
 
   st.title("Code")
@@ -440,3 +446,108 @@ elif opt == "Least Recently Used":
           st.write(f"Miss ratio: {miss/len(pages)}")
     except:
       st.warning("Check upur inputs.")
+elif opt == "Reader Writer":
+  mutex = threading.Semaphore(1)  
+  db = threading.Semaphore(1)  
+  reader_count = 0
+  iterations = 0 
+  operations = []
+
+  def Reader():
+      global reader_count, iterations
+      while iterations < 5: 
+          mutex.acquire()  
+          reader_count += 1  
+          if reader_count == 1: 
+              db.acquire()  
+          mutex.release() 
+          operations.append("Reading...")
+          time.sleep(random.uniform(0.5, 1.5))
+          
+          mutex.acquire()  
+          reader_count -= 1  
+          if reader_count == 0: 
+              db.release() 
+          mutex.release()  
+          
+          time.sleep(random.uniform(0.5, 1.5))
+          iterations += 1 
+
+  def Writer():
+      global iterations
+      while iterations < 5:  
+          time.sleep(random.uniform(0.5, 2.5))
+          db.acquire() 
+          operations.append("Writing...")
+          time.sleep(random.uniform(0.5, 1.5))
+          db.release()
+          iterations += 1
+  st.title("Reader Writer")
+
+  st.markdown("---")
+
+  st.header("Code")
+  code="""import threading
+          import time
+          import random
+
+          mutex = threading.Semaphore(1)  
+          db = threading.Semaphore(1)  
+          reader_count = 0
+          iterations = 0 
+          def Reader():
+              global reader_count, iterations
+              while iterations < 10: 
+                  mutex.acquire()  
+                  reader_count += 1  
+                  if reader_count == 1: 
+                      db.acquire()  
+                  mutex.release() 
+                  print("Reading...")
+                  time.sleep(random.uniform(0.5, 1.5))
+                  
+                  mutex.acquire()  
+                  reader_count -= 1  
+                  if reader_count == 0: 
+                      db.release() 
+                  mutex.release()  
+                  
+                  time.sleep(random.uniform(0.5, 1.5))
+                  iterations += 1 
+
+          def Writer():
+              global iterations
+              while iterations < 10:  
+                  time.sleep(random.uniform(0.5, 3.5))
+                  db.acquire() 
+                  print("Writing...")
+                  time.sleep(random.uniform(0.5, 1.5))
+                  db.release()
+                  iterations += 1  
+
+          reader_thread = threading.Thread(target=Reader)
+          writer_thread = threading.Thread(target=Writer)
+
+          reader_thread.start()
+          writer_thread.start()
+
+          reader_thread.join()
+          writer_thread.join()"""
+  st.code(code,language="Python")
+
+  st.markdown("---")
+
+  btn = st.button(label="Start",key="rw")
+  if btn:
+    reader_thread = threading.Thread(target=Reader)
+    writer_thread = threading.Thread(target=Writer)
+
+    reader_thread.start()
+    writer_thread.start()
+
+    reader_thread.join()
+    writer_thread.join()
+    
+  for i in operations:
+      st.write(i)
+      time.sleep(random.uniform(0.5, 1.5))
