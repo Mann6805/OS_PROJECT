@@ -430,8 +430,8 @@ elif opt == "Least Recently Used":
 
   st.header("Calculate: ")
 
-  frames = st.text_input(label="Enter frames: ",placeholder="eg: 60")
-  pages = st.text_input(label="Enter pages: ",placeholder="eg: 55 67 86 87")
+  frames = st.text_input(label="Enter frames: ",placeholder="eg: 4")
+  pages = st.text_input(label="Enter pages: ",placeholder="eg: 7 0 2 4 5 1 2 7 0 0 0")
 
   if frames and pages:
     try:
