@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
-opt = st.sidebar.radio("Select",options=("Premptive Priority","FCFS Disk Scheduling","Least Recently Used"))
+opt = st.sidebar.radio("Choose your option",options=("Premptive Priority","FCFS Disk Scheduling","Least Recently Used"))
 if opt == "Premptive Priority":
 
   def Priority(processlist):
@@ -440,4 +440,3 @@ elif opt == "Least Recently Used":
           st.write(f"Miss ratio: {miss/len(pages)}")
     except:
       st.warning("Check upur inputs.")
-
